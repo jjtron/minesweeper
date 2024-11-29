@@ -181,8 +181,28 @@ class MinesweeperAI():
                if it can be concluded based on the AI's knowledge base
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
+
+            HOW TO APPEND NEW SENTENCES TO KNOWLEDGE BASE
+            s = set()
+            s.add(cell)
+            some_class = Sentence(s, count)
+            self.knowledge.append(some_class)
+            for i in range(0, len(self.knowledge) - 1):
+                print(self.knowledge[i].cells)
         """
-        raise NotImplementedError
+
+        # 1 Mark the cell as a move that has been made
+        self.moves_made.add(cell)
+        # 2 Mark the cell as safe
+        self.safes.add(cell)
+        # 3 Add a new sentence to the AI's knowledge base ...
+        cell_set = set()
+        cell_set.add(cell)
+        new_sentence = Sentence(cell_set, count)
+        self.knowledge.append(new_sentence)
+        # 4 Mark any additional cells as safe or as mines ...
+        
+
 
     def make_safe_move(self):
         """
