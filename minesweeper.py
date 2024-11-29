@@ -181,14 +181,6 @@ class MinesweeperAI():
                if it can be concluded based on the AI's knowledge base
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
-
-            HOW TO APPEND NEW SENTENCES TO KNOWLEDGE BASE
-            s = set()
-            s.add(cell)
-            some_class = Sentence(s, count)
-            self.knowledge.append(some_class)
-            for i in range(0, len(self.knowledge) - 1):
-                print(self.knowledge[i].cells)
         """
 
         # 1 Mark the cell as a move that has been made
@@ -196,12 +188,14 @@ class MinesweeperAI():
         # 2 Mark the cell as safe
         self.safes.add(cell)
         # 3 Add a new sentence to the AI's knowledge base ...
-        cell_set = set()
-        cell_set.add(cell)
-        new_sentence = Sentence(cell_set, count)
+        neighbors = self.get_neighbors(cell)
+        new_sentence = Sentence(neighbors, count)
         self.knowledge.append(new_sentence)
+        for i in range(0, len(self.knowledge)):
+            print(self.knowledge[i].cells)
+            print(self.knowledge[i].count)
         # 4 Mark any additional cells as safe or as mines ...
-        
+
 
 
     def make_safe_move(self):
@@ -223,3 +217,40 @@ class MinesweeperAI():
             2) are not known to be mines
         """
         raise NotImplementedError
+    
+    def get_neighbors(self, cell):
+        neighbors = set()
+        # check nw
+        if cell[0] - 1 >= 0 and cell[1] - 1 >= 0:
+            neighbors.add((cell[0] - 1, cell[1] - 1))
+
+        # check n
+        if cell[0] - 1 >= 0:
+            neighbors.add((cell[0] - 1, cell[1]))
+
+        # check ne
+        if cell[0] - 1 >= 0 and cell[1] + 1 <= 7:
+            neighbors.add((cell[0] - 1, cell[1] + 1))
+
+        # check e
+        if cell[1] + 1 <= 7:
+            neighbors.add((cell[0], cell[1] + 1))
+
+        # check se
+        if cell[0] + 1 <= 7 and cell[1] + 1 <= 7:
+            neighbors.add((cell[0] + 1, cell[1] + 1))
+
+        # check s
+        if cell[0] + 1 <= 7:
+            neighbors.add((cell[0] + 1, cell[1]))
+
+        # check sw
+        if cell[0] + 1 <= 7 and cell[1] - 1 >= 0:
+            neighbors.add((cell[0] + 1, cell[1] - 1))
+
+        # check w
+        if cell[1] - 1 >= 0:
+            neighbors.add((cell[0], cell[1] - 1))  
+
+        return neighbors
+            
