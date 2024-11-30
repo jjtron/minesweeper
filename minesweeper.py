@@ -25,8 +25,8 @@ class Minesweeper():
         # Add mines randomly
         n = 0
         while len(self.mines) != 1:
-            i = 0 #random.randrange(height)
-            j = 0 #random.randrange(width)
+            i = 2 #random.randrange(height)
+            j = 2 #random.randrange(width)
             #n += 1
             if not self.board[i][j]:
                 self.mines.add((i, j))
@@ -189,21 +189,33 @@ class MinesweeperAI():
         self.knowledge.append(new_sentence)
 
         # 4 Mark any additional cells as safe or as mines ...
+        for i in range(0, len(self.knowledge)):
+            if self.knowledge[i].count == 0:
+                safe_cells = self.knowledge[i].cells.copy()
+                for cell in safe_cells:
+                    self.mark_safe(cell)
+                del self.knowledge[i]
+
+        for i in range(0, len(self.knowledge)):
+            print(self.knowledge[i].cells)
+
+        
+        '''
         common_cells = set()
-        new_sentences = []
+        common_subset = set()
         for i in range(0, len(self.knowledge)):
             for j in range(1 + i, len(self.knowledge)):
-                new_sentence_1 = Sentence(common_cells, 0)
                 for k in self.knowledge[i].cells:
                     for l in self.knowledge[j].cells:
-                        if (k[0],k[1]) == (l[0],l[1]):
-                            print(self.knowledge[i].count - self.knowledge[j].count)
-                            new_sentence_1.cells.add(k)
-                            new_sentence_1.count = self.knowledge[i].count - self.knowledge[j].count
-                new_sentences.append(new_sentence_1)
-        print()
-        for i in range(0 , len(new_sentences)):
-            print(new_sentences[i])       
+                        if k == l:
+                            common_subset.add(k)
+                print(common_subset)
+                print("i: ", self.knowledge[i].cells)
+                print("diff: ", self.knowledge[i].cells.difference(common_subset)) 
+                print("j: ",self.knowledge[j].cells)
+                print("diff: ", self.knowledge[j].cells.difference(common_subset))
+                print()  
+        '''
         
         '''
         for i in range(len(self.knowledge)):
