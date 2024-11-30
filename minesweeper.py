@@ -23,9 +23,11 @@ class Minesweeper():
             self.board.append(row)
 
         # Add mines randomly
-        while len(self.mines) != mines:
-            i = random.randrange(height)
-            j = random.randrange(width)
+        n = 0
+        while len(self.mines) != 2:
+            i = n #random.randrange(height)
+            j = 0 #random.randrange(width)
+            n += 1
             if not self.board[i][j]:
                 self.mines.add((i, j))
                 self.board[i][j] = True
@@ -114,19 +116,15 @@ class Sentence():
         raise NotImplementedError
 
     def mark_mine(self, cell):
-        """
-        Updates internal knowledge representation given the fact that
-        a cell is known to be a mine.
-        """
-        raise NotImplementedError
+        self.cells.remove(cell)
+        cell += tuple('m')
+        self.cells.add(cell)
 
     def mark_safe(self, cell):
-        """
-        Updates internal knowledge representation given the fact that
-        a cell is known to be safe.
-        """
-        raise NotImplementedError
-
+        if cell in self.cells:
+            self.cells.remove(cell)
+        cell += tuple('s')
+        self.cells.add(cell)
 
 class MinesweeperAI():
     """
@@ -186,22 +184,35 @@ class MinesweeperAI():
         # 1 Mark the cell as a move that has been made
         self.moves_made.add(cell)
         # 2 Mark the cell as safe
-        self.safes.add(cell)
+        self.mark_safe(cell)
         # 3 Add a new sentence to the AI's knowledge base ...
         neighbors = self.get_neighbors(cell)
         new_sentence = Sentence(neighbors, count)
         self.knowledge.append(new_sentence)
 
-        self.remove_safe_cells_recursive()
-
+        # 4 Mark any additional cells as safe or as mines ...
+        common_cells = set()
+        new_sentences = []
+        for i in range(0, len(self.knowledge)):
+            for j in range(1 + i, len(self.knowledge)):
+                new_sentence_1 = Sentence(common_cells, 0)
+                for k in self.knowledge[i].cells:
+                    for l in self.knowledge[j].cells:
+                        if (k[0],k[1]) == (l[0],l[1]):
+                            print(self.knowledge[i].count - self.knowledge[j].count)
+                            new_sentence_1.cells.add(k)
+                            new_sentence_1.count = self.knowledge[i].count - self.knowledge[j].count
+                new_sentences.append(new_sentence_1)
+        print()
+        for i in range(0 , len(new_sentences)):
+            print(new_sentences[i])       
+        
+        '''
         for i in range(len(self.knowledge)):
             print("i = ",i)
             print(self.knowledge[i])
             print()
-
-        # 4 Mark any additional cells as safe or as mines ...
-
-
+        '''
 
     def make_safe_move(self):
         """
