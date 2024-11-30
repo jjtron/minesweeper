@@ -24,10 +24,10 @@ class Minesweeper():
 
         # Add mines randomly
         n = 0
-        while len(self.mines) != 2:
-            i = n #random.randrange(height)
+        while len(self.mines) != 1:
+            i = 0 #random.randrange(height)
             j = 0 #random.randrange(width)
-            n += 1
+            #n += 1
             if not self.board[i][j]:
                 self.mines.add((i, j))
                 self.board[i][j] = True
@@ -116,15 +116,13 @@ class Sentence():
         raise NotImplementedError
 
     def mark_mine(self, cell):
-        self.cells.remove(cell)
-        cell += tuple('m')
-        self.cells.add(cell)
+        if cell in self.cells:
+            self.cells.remove(cell)
+            self.count -= 1
 
     def mark_safe(self, cell):
         if cell in self.cells:
             self.cells.remove(cell)
-        cell += tuple('s')
-        self.cells.add(cell)
 
 class MinesweeperAI():
     """
