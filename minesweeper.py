@@ -191,9 +191,14 @@ class MinesweeperAI():
         neighbors = self.get_neighbors(cell)
         new_sentence = Sentence(neighbors, count)
         self.knowledge.append(new_sentence)
-        for i in range(0, len(self.knowledge)):
-            print(self.knowledge[i].cells)
-            print(self.knowledge[i].count)
+
+        for c in self.safes:
+            knowledge_index = self.remove_safe_from_knowledge(c)
+            if knowledge_index != None:
+                print(c)
+                print("before", self.knowledge[knowledge_index[0]].cells)
+                self.knowledge[knowledge_index[0]].cells.remove(c)
+                print("after", self.knowledge[knowledge_index[0]].cells)
         # 4 Mark any additional cells as safe or as mines ...
 
 
@@ -253,4 +258,11 @@ class MinesweeperAI():
             neighbors.add((cell[0], cell[1] - 1))  
 
         return neighbors
-            
+
+    def remove_safe_from_knowledge(self, safe):
+        
+        for i in range(0, len(self.knowledge)):
+            for cell in self.knowledge[i].cells:
+                if safe == cell:
+                    return [i, safe]
+        return None
