@@ -25,8 +25,8 @@ class Minesweeper():
         # Add mines randomly
         n = 0
         while len(self.mines) != 1:
-            i = 2 #random.randrange(height)
-            j = 2 #random.randrange(width)
+            i = 0 #random.randrange(height)
+            j = 0 #random.randrange(width)
             #n += 1
             if not self.board[i][j]:
                 self.mines.add((i, j))
@@ -189,6 +189,9 @@ class MinesweeperAI():
         self.knowledge.append(new_sentence)
 
         # 4 Mark any additional cells as safe or as mines ...
+
+        # Mark safe cells that are in statements of count == 0
+        # and delete the statement
         for i in range(0, len(self.knowledge)):
             if self.knowledge[i].count == 0:
                 safe_cells = self.knowledge[i].cells.copy()
@@ -197,9 +200,19 @@ class MinesweeperAI():
                 del self.knowledge[i]
 
         for i in range(0, len(self.knowledge)):
-            print(self.knowledge[i].cells)
+            print("after safes are gone: ", self.knowledge[i])
+        # Mark mines that are in statements of count == 1
+        # and delete the statement
+        for i in range(0, len(self.knowledge)):
+            if self.knowledge[i].count == 1:
+                mine_cell = self.knowledge[i].cells.copy()
+                for cell in mine_cell:
+                    self.mark_mine(cell)
+                del self.knowledge[i]
 
-        
+        for i in range(0, len(self.knowledge)):
+            print("after mines are gone: ", self.knowledge[i])
+
         '''
         common_cells = set()
         common_subset = set()
