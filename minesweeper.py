@@ -24,10 +24,10 @@ class Minesweeper():
 
         # Add mines randomly
         n = 0
-        while len(self.mines) != 1:
-            i = 0 #random.randrange(height)
-            j = 0 #random.randrange(width)
-            #n += 1
+        while len(self.mines) != 4:
+            i = 1 #random.randrange(height)
+            j = n #random.randrange(width)
+            n += 1
             if not self.board[i][j]:
                 self.mines.add((i, j))
                 self.board[i][j] = True
@@ -190,6 +190,21 @@ class MinesweeperAI():
 
         # 4 Mark any additional cells as safe or as mines ...
 
+        # Remove subsets where possible
+        subsets_by_index = []
+        for i in range(0, len(self.knowledge)):
+            for j in range(1 + i, len(self.knowledge)):
+                # test if self.knowledge[i] is a subset of self.knowledge[j]
+                if self.test_for_subset(self.knowledge[i].cells, self.knowledge[j].cells):
+                    subsets_by_index.append(i)
+        # remove duplicate subsets_by_index values
+        no_duplicates = list(dict.fromkeys(subsets_by_index))
+        # 
+        if len(no_duplicates) > 0:
+            for i in reversed(no_duplicates):
+                del self.knowledge[i]
+
+        return
         # Mark safe cells that are in statements of count == 0
         # and delete the statement
         for i in range(0, len(self.knowledge)):
@@ -292,6 +307,13 @@ class MinesweeperAI():
             neighbors.add((cell[0], cell[1] - 1))  
 
         return neighbors
+
+    def test_for_subset(self, a, b):
+        isSubset = True
+        for cell in a:
+            if not cell in b:
+                isSubset = False
+        return isSubset
 
     def remove_safe_from_knowledge(self, safe):
         for i in range(0, len(self.knowledge)):
