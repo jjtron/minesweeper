@@ -301,22 +301,3 @@ class MinesweeperAI():
         count0 = self.knowledge[index_pair[0]].count
         self.knowledge[index_pair[1]].count = count1 - count0
         self.knowledge[index_pair[1]].count = self.knowledge[index_pair[1]].count
-
-    def remove_safe_from_knowledge(self, safe):
-        for i in range(0, len(self.knowledge)):
-            for cell in self.knowledge[i].cells:
-                if safe == cell:
-                    return [i, safe]
-        return None
-
-    def remove_safe_cells_recursive(self):
-        for c in self.safes:
-            knowledge_index = self.remove_safe_from_knowledge(c)
-            if knowledge_index != None:
-                #print(c)
-                #print("before", self.knowledge[knowledge_index[0]].cells)
-                self.knowledge[knowledge_index[0]].cells.remove(c)
-                #print("after", self.knowledge[knowledge_index[0]].cells)
-                self.remove_safe_cells_recursive()
-            else:
-                return None
