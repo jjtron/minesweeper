@@ -315,10 +315,14 @@ class MinesweeperAI():
 
     def diff_sentences(self, index_pair):
         # subtract cells
+        cells_copy = self.knowledge[index_pair[1]].cells.copy()
+        new_knowledge = Sentence(cells_copy, 0)
         for cell in self.knowledge[index_pair[0]].cells:
-            self.knowledge[index_pair[1]].cells.remove(cell)
+            new_knowledge.cells.remove(cell)
+
         # subtract count
         count1 = self.knowledge[index_pair[1]].count
         count0 = self.knowledge[index_pair[0]].count
-        self.knowledge[index_pair[1]].count = count1 - count0
-        self.knowledge[index_pair[1]].count = self.knowledge[index_pair[1]].count
+
+        new_knowledge.count = count1 - count0
+        self.knowledge.append(new_knowledge)
