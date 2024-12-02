@@ -24,10 +24,10 @@ class Minesweeper():
 
         # Add mines randomly
         n = 0
-        while len(self.mines) != 4:
-            i = 1 #random.randrange(height)
-            j = n #random.randrange(width)
-            n += 1
+        while len(self.mines) != 8:
+            i = random.randrange(height)
+            j = random.randrange(width)
+            #n += 1
             if not self.board[i][j]:
                 self.mines.add((i, j))
                 self.board[i][j] = True
@@ -202,32 +202,39 @@ class MinesweeperAI():
         # 
         if len(subset_pairs_no_duplicates) > 0:
             for pair in subset_pairs_no_duplicates:
-                self.subtract_subset(pair)
-                #del self.knowledge[i]
+                self.diff_sentences(pair)
 
-        return
         # Mark safe cells that are in statements of count == 0
         # and delete the statement
+        indexes = [] 
         for i in range(0, len(self.knowledge)):
             if self.knowledge[i].count == 0:
+                indexes.append(i)
                 safe_cells = self.knowledge[i].cells.copy()
                 for cell in safe_cells:
+                    print("safe found: ", cell)
                     self.mark_safe(cell)
-                del self.knowledge[i]
+        for i in reversed(indexes):   
+            del self.knowledge[i]
 
-        for i in range(0, len(self.knowledge)):
-            print("after safes are gone: ", self.knowledge[i])
+        #for i in range(0, len(self.knowledge)):
+        #    print("after safes are gone: ", self.knowledge[i])
+        
         # Mark mines that are in statements of count == 1
         # and delete the statement
+        indexes = [] 
         for i in range(0, len(self.knowledge)):
-            if self.knowledge[i].count == 1:
+            if self.knowledge[i].count == 1 and len(self.knowledge[i].cells) == 1:
+                indexes.append(i)
                 mine_cell = self.knowledge[i].cells.copy()
                 for cell in mine_cell:
+                    print("mine found: ", self.knowledge[i], cell)
                     self.mark_mine(cell)
-                del self.knowledge[i]
+        for i in reversed(indexes):            
+            del self.knowledge[i]
 
-        for i in range(0, len(self.knowledge)):
-            print("after mines are gone: ", self.knowledge[i])
+        #for i in range(0, len(self.knowledge)):
+        #    print("after mines are gone: ", self.knowledge[i])
 
         '''
         common_cells = set()
@@ -316,13 +323,15 @@ class MinesweeperAI():
                 isSubset = False
         return isSubset
 
-    def subtract_subset(self, index_pair):
-        print(self.knowledge[index_pair[1]].cells)
-        print(self.knowledge[index_pair[0]].cells)
+    def diff_sentences(self, index_pair):
+        # subtract cells
         for cell in self.knowledge[index_pair[0]].cells:
             self.knowledge[index_pair[1]].cells.remove(cell)
-        print(self.knowledge[index_pair[1]].cells)
-        print("*")
+        # subtract count
+        count1 = self.knowledge[index_pair[1]].count
+        count0 = self.knowledge[index_pair[0]].count
+        self.knowledge[index_pair[1]].count = count1 - count0
+        self.knowledge[index_pair[1]].count = self.knowledge[index_pair[1]].count
 
     def remove_safe_from_knowledge(self, safe):
         for i in range(0, len(self.knowledge)):
