@@ -212,7 +212,6 @@ class MinesweeperAI():
                 indexes.append(i)
                 safe_cells = self.knowledge[i].cells.copy()
                 for cell in safe_cells:
-                    print("safe found: ", cell)
                     self.mark_safe(cell)
         for i in reversed(indexes):   
             del self.knowledge[i]
