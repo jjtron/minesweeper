@@ -215,9 +215,6 @@ class MinesweeperAI():
                     self.mark_safe(cell)
         for i in reversed(indexes):   
             del self.knowledge[i]
-
-        #for i in range(0, len(self.knowledge)):
-        #    print("after safes are gone: ", self.knowledge[i])
         
         # Mark mines that are in statements of count == 1
         # and delete the statement
@@ -231,33 +228,6 @@ class MinesweeperAI():
                     self.mark_mine(cell)
         for i in reversed(indexes):            
             del self.knowledge[i]
-
-        #for i in range(0, len(self.knowledge)):
-        #    print("after mines are gone: ", self.knowledge[i])
-
-        '''
-        common_cells = set()
-        common_subset = set()
-        for i in range(0, len(self.knowledge)):
-            for j in range(1 + i, len(self.knowledge)):
-                for k in self.knowledge[i].cells:
-                    for l in self.knowledge[j].cells:
-                        if k == l:
-                            common_subset.add(k)
-                print(common_subset)
-                print("i: ", self.knowledge[i].cells)
-                print("diff: ", self.knowledge[i].cells.difference(common_subset)) 
-                print("j: ",self.knowledge[j].cells)
-                print("diff: ", self.knowledge[j].cells.difference(common_subset))
-                print()  
-        '''
-        
-        '''
-        for i in range(len(self.knowledge)):
-            print("i = ",i)
-            print(self.knowledge[i])
-            print()
-        '''
 
     def make_safe_move(self):
         """
