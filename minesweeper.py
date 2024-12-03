@@ -182,7 +182,8 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        print("add_knowledge: ", cell)
+        #print("add_knowledge: ", cell)
+
         # 1 Mark the cell as a move that has been made
         self.moves_made.add(cell)
         # 2 Mark the cell as safe
@@ -220,11 +221,12 @@ class MinesweeperAI():
         for i in reversed(indexes):   
             del self.knowledge[i]
         
-        # Mark mines that are in statements of count == 1
+        # Mark mines that are in statements of count == X and number f cells = X
         # and delete the statement
         indexes = [] 
         for i in range(0, len(self.knowledge)):
-            if self.knowledge[i].count == 1 and len(self.knowledge[i].cells) == 1:
+            cell_count = self.knowledge[i].count
+            if cell_count > 0 and self.knowledge[i].count == len(self.knowledge[i].cells):
                 indexes.append(i)
                 mine_cell = self.knowledge[i].cells.copy()
                 for cell in mine_cell:
