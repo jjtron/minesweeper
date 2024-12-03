@@ -118,15 +118,15 @@ class Sentence():
         return self.safes
 
     def mark_mine(self, cell):
+        self.mines.add(cell)
         if cell in self.cells:
             self.cells.remove(cell)
             self.count -= 1
-            self.mines.add(cell)
 
     def mark_safe(self, cell):
+        self.safes.add(cell)
         if cell in self.cells:
             self.cells.remove(cell)
-            self.safes.add(cell)
 
 class MinesweeperAI():
     """
@@ -182,7 +182,7 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        #print("add_knowledge: ", cell)
+        # print("add_knowledge: ", cell)
 
         # 1 Mark the cell as a move that has been made
         self.moves_made.add(cell)
@@ -230,7 +230,7 @@ class MinesweeperAI():
                 indexes.append(i)
                 mine_cell = self.knowledge[i].cells.copy()
                 for cell in mine_cell:
-                    print("mine found: ", self.knowledge[i], cell)
+                    #print("mine found: ", self.knowledge[i], cell)
                     self.mark_mine(cell)
         for i in reversed(indexes):            
             del self.knowledge[i]
@@ -260,7 +260,7 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        print("RANDOM MOVE")
+        #print("RANDOM MOVE")
         all_cells = set()
         safes_copy = self.safes.copy()
         for i in range(self.height):
